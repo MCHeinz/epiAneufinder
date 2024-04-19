@@ -111,7 +111,7 @@ epiAneufinder <- function(input, outdir, blacklist, windowSize, genome="BSgenome
     message("Correcting for GC bias...")
     corrected_counts <- peaks[, mclapply(.SD, function(x) {
       # LOESS correction for GC
-      fit <- stats::loess(x ~ peaks$GC)
+      fit <- stats::loess(x ~ peaks$GC, control = loess.control(trace.hat  = "approximate"))
       correction <- mean(x) / fit$fitted
       as.integer(round(x * correction))
     }, mc.cores = ncores), .SDcols = patterns("cell-")]
